@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Threading;
 
 namespace FindSmallest
 {
+   
+
+}
     class Program
     {
+
         private static readonly int[][] Data = new int[][]{
             new[]{1,5,4,2}, 
             new[]{3,2,4,11,4},
@@ -32,11 +37,18 @@ namespace FindSmallest
 
         static void Main()
         {
+            Thread t;
             foreach (int[] data in Data)
             {
-                int smallest = FindSmallest(data);
-                Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
+                t = new Thread(() =>
+                {
+                    int smallest = FindSmallest(data);
+                    Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
+                });
+                t.Start();
+
             }
+            
         }
     }
-}
+
