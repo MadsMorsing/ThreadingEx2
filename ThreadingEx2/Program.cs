@@ -1,21 +1,21 @@
 ﻿using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FindSmallest
 {
-   
-
-}
     class Program
     {
-
         private static readonly int[][] Data = new int[][]{
-            new[]{1,5,4,2}, 
-            new[]{3,2,4,11,4},
-            new[]{33,2,3,-1, 10},
-            new[]{3,2,8,9,-1},
-            new[]{1, 22,1,9,-3, 5}
-        };
+           new[]{1,5,4,2}, 
+           new[]{3,2,4,11,4},
+           new[]{33,2,3,-1, 10},
+           new[]{3,2,8,9,-1},
+           new[]{1, 22,1,9,-3, 5}
+       };
+
 
         private static int FindSmallest(int[] numbers)
         {
@@ -37,18 +37,20 @@ namespace FindSmallest
 
         static void Main()
         {
-            Thread t;
+            var tasks = new List<Task<int>>();
+
             foreach (int[] data in Data)
             {
-                t = new Thread(() =>
-                {
-                    int smallest = FindSmallest(data);
-                    Console.WriteLine("\t" + String.Join(", ", data) + "\n-> " + smallest);
-                });
+
+                var t = new Task<int>(() => FindSmallest(data));
                 t.Start();
-
+                tasks.Add(t);
             }
-            
-        }
-    }
+            var result = tasks.Select(task => task.Result);
 
+            Console.WriteLine("{0} {1}", string.Join(",", result), FindSmallest(result.ToArray()));
+
+        }
+
+    }
+}
